@@ -5,14 +5,56 @@
 ///////////////////////////////////////////////////////////////'''
 
 import folium
+import sqlite3
 from jinja2 import Template
+
+#//////////////////////////////////////////////////////////////////
+#//                                                              //      
+#//                     LES DONNEES                              //
+#//                                                              //
+#//////////////////////////////////////////////////////////////////
+
+# Connexion à la base de données
+connect = sqlite3.connect('./data/BDD.db')
+
+# Création d'un curseur pour exécuter des requêtes
+cur = connect.cursor()
+
+#//////////////////////////////////////////////////////////////////
+#//                                                              //      
+#//                  CREATION DE LA CARTE                        //
+#//                                                              //
+#//////////////////////////////////////////////////////////////////
+
 
 # Coordonnées de la carte centrée sur La Baule
 lat = 47.264
 lon = -2.385
 
+def arrondi_dizaine(nombre):
+    dizaine_superieure = (nombre // 10) * 10
+    return dizaine_superieure
 
 def make_map(windspeed, winddeg):
+    
+    # Recolte de donnée
+    poid = int(input("Quel est votre poid ?"))
+    poid = arrondi_dizaine(poid)
+    if (poid > 90):
+        poid = 90.1
+    if (poid < 60):
+        poid = 60
+        print("Attention au petit poid !")
+    
+    cur.execute("SELECT Voile1,Voile2 FROM Planche_a_voile WHERE Poids = '{}' and Vent >= '{}'".format(poid, int(windspeed)))
+    data_voile = cur.fetchall()
+
+    #print(windspeed)
+    #print(data_voile)
+
+    # Donnée de la voile pour sa taille en fonction du poid et du vent
+    voile = "Entre {} et {} m²".format(data_voile[0][0],data_voile[0][1])
+
     # Création de la carte
     ma_carte = folium.Map(location=[lat, lon], zoom_start=13)
 
@@ -33,6 +75,7 @@ def make_map(windspeed, winddeg):
     data = {
         'Vitesse du vent': windspeed,
         'Orientation du vent': winddeg,
+        'Taille de la voile ': voile,
         'Distance': 'Valeur 3'
     }
 
@@ -59,5 +102,3 @@ def make_map(windspeed, winddeg):
 
     # Enregistrement de la carte dans un fichier HTML
     ma_carte.save('ma_carte.html')
-
-make_map(0,0)

@@ -23,8 +23,8 @@ wind_deg = json["wind"]["deg"]
 def convertion(data):
     return (data * 3.6)
 
-wind_speed = convertion(float(wind_speed))
+wind_speedbis = convertion(float(wind_speed))
 
-print(wind_speed ,"km/h")
+print(wind_speedbis ,"km/h")
 
 print("Direction du vent",wind_deg,"°")
