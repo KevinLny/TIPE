@@ -35,6 +35,25 @@ def arrondi_dizaine(nombre):
     dizaine_superieure = (nombre // 10) * 10
     return dizaine_superieure
 
+def rosace(winddeg):
+    if(winddeg >= 0 and winddeg < 45):
+        return 0
+    if(winddeg >= 45 and winddeg < 90):
+        return 45
+    if(winddeg >= 90 and winddeg < 135):
+        return 90
+    if(winddeg >= 135 and winddeg < 180):
+        return 135
+    if(winddeg >= 180 and winddeg < 225):
+        return 180
+    if(winddeg >= 225 and winddeg < 270):
+        return 225
+    if(winddeg >= 270 and winddeg < 315):
+        return 270
+    if(winddeg >= 315 and winddeg < 360):
+        return 315
+    
+
 def make_map(windspeed, winddeg):
     
     # Recolte de donnée
@@ -55,6 +74,10 @@ def make_map(windspeed, winddeg):
     # Donnée de la voile pour sa taille en fonction du poid et du vent
     voile = "Entre {} et {} m²".format(data_voile[0][0],data_voile[0][1])
 
+    # Donné de la direction du vent en fonction du degré du vent
+
+    image = "<img src= image/{}°.png>".format(rosace(winddeg))
+
     # Création de la carte
     ma_carte = folium.Map(location=[lat, lon], zoom_start=13)
 
@@ -73,20 +96,20 @@ def make_map(windspeed, winddeg):
 
     # Données à afficher dans l'encadré
     data = {
-        'Vitesse du vent': windspeed,
-        'Orientation du vent': winddeg,
+        'Vitesse du vent': str(windspeed) + ' m/s',
+        'Orientation du vent': str(winddeg) + '°',
         'Taille de la voile ': voile,
-        'Distance': 'Valeur 3'
+        'Distance': 'Valeur 3',
+        '': image,
     }
-
-
+    
     # Création de l'encadré
     html_template = '''
     <div style="border: 4px solid black; background-color: white; padding: 40px;">
         <h4>Données</h4>
         <ul>
             {% for key, value in data.items() %}
-            <li><B>{{ key }}</B>: {{ value }}</li>
+            <B>{{ key }}</B>: <br><center>{{ value }}</center></br>
             {% endfor %}
         </ul>
     </div>
