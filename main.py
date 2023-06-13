@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////'''
 
 from creer_carte import*
-from meteo import*
+from meteo_data import*
 
 #//////////////////////////////////////////////////////////////////
 #//                                                              //      
@@ -16,4 +16,4 @@ from meteo import*
 # Propose la planche adapté en fonction du vent et du poids
 
 # Créer la carte
-make_map(wind_speed,wind_deg)
+make_map(wind_speed, wind_deg)

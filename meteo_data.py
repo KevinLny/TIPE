@@ -1,6 +1,6 @@
 '''///////////////////////////////////////////////////////////////
 //  Kevin Kuzu                                                  //
-//                                                              //                                                            //
+//                                                              //
 //  27/05/2023                                                  //
 ///////////////////////////////////////////////////////////////'''
 
@@ -25,6 +25,6 @@ def convertion(data):
 
 wind_speedbis = convertion(float(wind_speed))
 
+print(wind_speed, "m/s")
 print(wind_speedbis ,"km/h")
-
 print("Direction du vent",wind_deg,"°")
