@@ -88,7 +88,7 @@ def rosace(winddeg : int):
         return 225
     if(winddeg >= 270 and winddeg < 315):
         return 270
-    if(winddeg >= 315 and winddeg < 360):
+    if(winddeg >= 315 and winddeg <= 360):
         return 315
 
 #//////////////////////////////////////////////////////////////////
