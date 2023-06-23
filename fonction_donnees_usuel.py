@@ -37,8 +37,8 @@ def coefficient_porte_traine(winddeg, angle_planche):
         (float,float): coefficient de trainé et coefficient de porté
     """
     angle = abs(winddeg - angle_planche) % 90
-    cp = 0
-    ct = 0 
+    cp = 0.5
+    ct = 0
     if(0 <= angle and angle < 5):
         cp,ct = (0.05,0.6)
     if(5 <= angle and angle < 10):

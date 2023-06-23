@@ -7,6 +7,7 @@
 from fonction_donnees_usuel import*
 from meteo_data import*
 import numpy as np
+from math import*
 import matplotlib.pyplot as plt
 
 #//////////////////////////////////////////////////////////////////
@@ -15,18 +16,18 @@ import matplotlib.pyplot as plt
 #//                                                              //
 #//////////////////////////////////////////////////////////////////
 
-def function(t, surface, ct, cp):
-    return (1.0/(4.0*60.0)) * (t**2) * 1.292 * surface * (wind_speed**2) * (ct + cp)
+def function(t, surface, angle_planche, ct, cp):
+    angle = abs(wind_deg - angle_planche) % 360
+    return (1.0/(2.0*(poid + 50))) * t * 1.292 * surface * (wind_speed**2) * abs(cp*sin(angle) - ct*cos(angle))
 
-def determine_t(distance, surface, angle_planche):
-    distance = distance*(10**3)
+
+# On determine la vitesse de la planche à un instant t
+
+def determine_v(t, surface, angle_planche):
     ct, cp = coefficient_porte_traine(wind_deg, angle_planche)
-    t = 0
-    res = 0.0
-    while(distance > res):
-        res = function(t, surface, ct, cp)
-        t = t + 0.1
-    return t
+    v = function(t, surface, angle_planche, ct, cp)
+    return v
+
 
 #//////////////////////////////////////////////////////////////////
 #//                                                              //
@@ -34,24 +35,32 @@ def determine_t(distance, surface, angle_planche):
 #//                                                              //
 #//////////////////////////////////////////////////////////////////
 
-time = []
 
-for i in range(10):
-    time.append(determine_t(element[i][3], data_voile[0][0], element[i][2]))
+# On fait le rapport de la distance/vitesse de tous les points pour obtenir le temps minimum
 
-indicebest = time.index(min(time))  # Indice du meilleur point de départ pour aller à l'île des Evens
-print(time.index(min(time)))
+def liste_vitesse():                  
+    vitesses = []
+    for i in range (len(element)):
+        v = determine_v(600, data_voile[0][0], element[i][2])
+        vitesses.append(v)  
+    return vitesses
 
-#//////////////////////////////////////////////////////////////////
-#//                                                              //
-#//                  COURBE DISTANCE DE LA                       //
-#//                  MEILLEURS TRAJECTOIRE                       //
-#//                                                              //
-#//////////////////////////////////////////////////////////////////
+def temps_min():
+    vitesses = liste_vitesse()
+    temps = []
+    for i in range (len(vitesses)):
+        if(vitesses[i] != 0):
+            t = element[i][3] / vitesses[i]
+            temps.append(t)
+        else :
+            temps.append(700)
+    indice_position = temps.index(min(temps))
+    return indice_position
+        
+indicebest = temps_min()
+print(indicebest)
 
-x = np.linspace(0, 3600, 1000)
-ct, cp = coefficient_porte_traine(wind_deg, element[i][2])
-y = function(x, data_voile[0][0], ct, cp)
 
-plt.plot(x, y)
-plt.show()
+vitesse = []
+for t in range (600):
+    vitesse.append(determine_v(t, data_voile[0][0], element[indicebest][2]))

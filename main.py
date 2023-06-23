@@ -5,8 +5,6 @@
 ///////////////////////////////////////////////////////////////'''
 
 from creer_carte import*
-from meteo_data import*
-
 #//////////////////////////////////////////////////////////////////
 #//                                                              //      
 #//                       LE MAIN                                //
@@ -17,3 +15,14 @@ from meteo_data import*
 
 # Créer la carte
 make_map(wind_speed, wind_deg)
+
+#//////////////////////////////////////////////////////////////////
+#//                                                              //
+#//                  COURBE DISTANCE DE LA                       //
+#//                  MEILLEURS TRAJECTOIRE                       //
+#//                                                              //
+#//////////////////////////////////////////////////////////////////
+
+t = np.linspace(0, 600, 600)
+plt.plot(t, vitesse)
+plt.show()
